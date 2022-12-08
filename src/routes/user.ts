@@ -1,14 +1,12 @@
-import { Express } from "express";
-import { PrismaClient } from "@prisma/client"
+import { Express, Request, Response } from "express";
+import { prisma } from "../lib/prisma"
 import { z } from "zod"
-import CryptoJS from "crypto-js"
-
-const prisma = new PrismaClient({
-    log: ['query']
-})
+import * as dotenv from 'dotenv'
+import deserializeUser from "../middleware/deserializeUser";
+dotenv.config()
 
 export async function UserRoutes(route: Express) {
-    route.get('/users', async (request, response) => {
+    route.get('/users', deserializeUser, async (request: Request, response: Response) => {
         const users = await prisma.user.findMany({
             select: {
                 id: true,
@@ -24,7 +22,7 @@ export async function UserRoutes(route: Express) {
         return response.json(users)
     })
 
-    route.post('/users', async (request, response) => {
+    route.post('/users', deserializeUser, async (request: Request, response: Response) => {
         const createUserBody = z.object({
             name: z.string(),
             email: z.string(),
@@ -42,8 +40,6 @@ export async function UserRoutes(route: Express) {
         })
 
         if (!user) {
-            password = CryptoJS.MD5(password).toString()
-
             user = await prisma.user.create({
                 data: {
                     name,
