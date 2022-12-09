@@ -22,7 +22,7 @@ export async function UserRoutes(route: Express) {
         return response.json(users)
     })
 
-    route.post('/users', deserializeUser, async (request: Request, response: Response) => {
+    route.post('/users', async (request: Request, response: Response) => {
         const createUserBody = z.object({
             name: z.string(),
             email: z.string(),
