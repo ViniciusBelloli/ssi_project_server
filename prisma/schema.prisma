@@ -20,6 +20,9 @@ model User {
   userPublicKey String
   userRevokeKey String
   token         Token[]
+
+  messageFrom Messages[] @relation("messageFrom")
+  messageTo   Messages[] @relation("messageReveive")
 }
 
 model Token {
@@ -32,4 +35,14 @@ model Token {
   user User @relation(fields: [userId], references: [id])
 
   @@unique([userId, accessToken])
+}
+
+model Messages {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  message     String
+  userFrom    String @db.ObjectId
+  userReceive String @db.ObjectId
+
+  messageFrom    User @relation("messageFrom", fields: [userFrom], references: [id])
+  messageReveive User @relation("messageReveive", fields: [userReceive], references: [id])
 }
