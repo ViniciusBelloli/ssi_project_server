@@ -4,7 +4,7 @@ import config from "config";
 import { prisma } from "../lib/prisma"
 import { z } from "zod"
 import { verifyJwt, signJwt } from "../utils/jwt.utils";
-import { addDays, subDays } from 'date-fns'
+import { addDays } from 'date-fns'
 
 export async function AuthRoutes(route: Express) {
     route.post('/auth', async (request: Request, response: Response) => {
