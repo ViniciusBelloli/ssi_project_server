@@ -38,10 +38,11 @@ model Token {
 }
 
 model Messages {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   message     String
-  userFrom    String @db.ObjectId
-  userReceive String @db.ObjectId
+  createdAt   DateTime @default(now())
+  userFrom    String   @db.ObjectId
+  userReceive String   @db.ObjectId
 
   messageFrom    User @relation("messageFrom", fields: [userFrom], references: [id])
   messageReveive User @relation("messageReveive", fields: [userReceive], references: [id])

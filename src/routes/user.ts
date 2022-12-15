@@ -1,12 +1,16 @@
 import { Express, Request, Response } from "express";
 import { prisma } from "../lib/prisma"
 import { z } from "zod"
-import * as dotenv from 'dotenv'
 import deserializeUser from "../middleware/deserializeUser";
-dotenv.config()
 
 export async function UserRoutes(route: Express) {
-    route.get('/users', deserializeUser, async (request: Request, response: Response) => {
+    route.get('/users/:id', deserializeUser, async (request: Request, response: Response) => {
+        const getUserParams = z.object({
+            id: z.string(),
+        })
+
+        const { id } = getUserParams.parse(request.params)
+
         const users = await prisma.user.findMany({
             select: {
                 id: true,
@@ -16,7 +20,14 @@ export async function UserRoutes(route: Express) {
                 createdAt: true,
                 userPublicKey: true,
                 password: false,
-            }
+            },
+            where: {
+                NOT: {
+                    id: {
+                        equals: id,
+                    }
+                },
+            },
         })
 
         return response.json(users)

@@ -11,8 +11,6 @@ export function signJwt(
     "base64"
   ).toString("ascii");
 
-  console.log(signingKey)
-
   return jwt.sign(object, signingKey, {
     ...(options && options),
     algorithm: "RS256",
@@ -35,7 +33,6 @@ export function verifyJwt(
       decoded,
     };
   } catch (e: any) {
-    console.error(e);
     return {
       valid: false,
       expired: e.message === "jwt expired",

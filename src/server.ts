@@ -1,9 +1,13 @@
 import express from "express";
+import * as dotenv from 'dotenv';
+dotenv.config();
 import cors from "cors";
-import { UserRoutes } from "./routes/user";
-import { AuthRoutes } from "./routes/auth";
 import config from "config";
 import { Server } from "socket.io";
+
+import { UserRoutes } from "./routes/user";
+import { AuthRoutes } from "./routes/auth";
+import { MessageRoutes } from "./routes/message";
 
 declare global {
     var onlineUsers: any;
@@ -17,28 +21,29 @@ app.use(express.json());
 app.use(cors({ origin: '*' }))
 UserRoutes(app)
 AuthRoutes(app)
+MessageRoutes(app)
 
 const server = app.listen(port)
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "http://127.0.0.1:5173",
         credentials: true,
     },
 });
 
 globalThis.onlineUsers = new Map()
 
-io.on("connection", (socket) => {
+io.on('connection', (socket) => {
     globalThis.chatSocket = socket;
-    socket.on("add-user", (userId) => {
+    socket.on('add-user', (userId) => {
         onlineUsers.set(userId, socket.id);
     });
 
-    socket.on("send-msg", (data) => {
-        const sendUserSocket = onlineUsers.get(data.to);
+    socket.on('send-msg', (data) => {
+        const sendUserSocket = onlineUsers.get(data.userFrom);
         if (sendUserSocket) {
-            socket.to(sendUserSocket).emit("msg-recieved", data.message);
+            socket.to(sendUserSocket).emit('msg-recieved', data);
         }
     });
 });

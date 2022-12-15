@@ -75,6 +75,7 @@ export async function AuthRoutes(route: Express) {
 
         return response.status(200).json({
             id: user.id,
+            userPublicKey: user.userPublicKey,
             accessToken: accessToken,
             refreshToken: refreshToken
         })
@@ -87,7 +88,6 @@ export async function reIssueAccessToken({
     refreshToken: string;
 }) {
     const { decoded } = verifyJwt(refreshToken, "refreshTokenPublicKey");
-    console.log(get(decoded, "id"))
     if (!decoded || !get(decoded, "id")) return false;
 
     // if (!session || !session.valid) return false;
