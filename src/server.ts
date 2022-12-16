@@ -4,6 +4,8 @@ dotenv.config();
 import cors from "cors";
 import config from "config";
 import { Server } from "socket.io";
+import helmet from "helmet";
+import hpp from "hpp";
 
 import { UserRoutes } from "./routes/user";
 import { AuthRoutes } from "./routes/auth";
@@ -18,7 +20,10 @@ const app = express();
 const port = config.get<string>("port");
 
 app.use(express.json());
-app.use(cors({ origin: '*' }))
+app.use(cors({ origin: 'http://127.0.0.1:5173', credentials: true }))
+app.use(helmet())
+app.use(hpp())
+app.disable('x-powered-by')
 UserRoutes(app)
 AuthRoutes(app)
 MessageRoutes(app)
@@ -27,7 +32,7 @@ const server = app.listen(port)
 
 const io = new Server(server, {
     cors: {
-        origin: "http://127.0.0.1:5173",
+        origin: 'http://127.0.0.1:5173',
         credentials: true,
     },
 });

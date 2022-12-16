@@ -42,6 +42,10 @@ const deserializeUser = async (
     let expirationDate = addDays(currentDate, 7)
     let userId = <string><unknown>get(result.decoded, "id")
 
+    if (!userId) {
+      return res.status(400).json({ auth: false, message: 'No user found.' });
+    }
+
     await prisma.token.create({
       data: {
         accessToken,

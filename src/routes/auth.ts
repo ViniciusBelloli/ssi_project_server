@@ -90,11 +90,12 @@ export async function reIssueAccessToken({
 }) {
     const { decoded } = verifyJwt(refreshToken, "refreshTokenPublicKey");
     if (!decoded || !get(decoded, "id")) return false;
+    let id = <string>(get(decoded, "id") || '')
 
     // if (!session || !session.valid) return false;
     const user = await prisma.user.findUnique({
         where: {
-            id: get(decoded, "id")
+            id,
         }
     })
 
