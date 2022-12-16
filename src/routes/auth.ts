@@ -76,6 +76,7 @@ export async function AuthRoutes(route: Express) {
         return response.status(200).json({
             id: user.id,
             userPublicKey: user.userPublicKey,
+            userName: user.name,
             accessToken: accessToken,
             refreshToken: refreshToken
         })

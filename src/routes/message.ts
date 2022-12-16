@@ -39,9 +39,12 @@ export async function MessageRoutes(route: Express) {
         try {
             let messageResp = await prisma.messages.findMany({
                 where: {
-                    userFrom: {in: [userFrom, userReceive]},
-                    userReceive: {in: [userReceive, userFrom]},
-                }
+                    userFrom: { in: [userFrom, userReceive] },
+                    userReceive: { in: [userReceive, userFrom] },
+                },
+                orderBy: {
+                    createdAt: 'asc'
+                },
             })
 
             return response.status(200).json(messageResp)
