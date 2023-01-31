@@ -19,7 +19,7 @@ const app = express();
 const port = config.get<string>("port");
 
 app.use(express.json());
-app.use(cors({ origin: ['http://127.0.0.1:9000', 'http://localhost:9000', 'http://172.22.56.176/'], credentials: true }))
+app.use(cors({ origin: ['http://127.0.0.1:2000', 'http://localhost:2000', 'http://172.22.56.176/'], credentials: true }))
 app.use(helmet())
 app.use(hpp())
 app.disable('x-powered-by')

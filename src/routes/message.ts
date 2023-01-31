@@ -8,17 +8,19 @@ export async function MessageRoutes(route: Express) {
         const getMessageBody = z.object({
             userFrom: z.string(),
             userReceive: z.string(),
-            message: z.string(),
+            messageFrom: z.string(),
+            messageReceive: z.string(),
         })
 
-        let { userFrom, userReceive, message } = getMessageBody.parse(request.body)
+        let { userFrom, userReceive, messageFrom, messageReceive } = getMessageBody.parse(request.body)
 
         try {
             let messageResp = await prisma.messages.create({
                 data: {
                     userFrom,
                     userReceive,
-                    message,
+                    messageFrom,
+                    messageReceive,
                 }
             })
 

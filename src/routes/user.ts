@@ -33,6 +33,22 @@ export async function UserRoutes(route: Express) {
         return response.json(users)
     })
 
+    route.get('/users/public/:id', deserializeUser, async (request: Request, response: Response) => {
+        const getUserParams = z.object({
+            id: z.string(),
+        })
+
+        const { id } = getUserParams.parse(request.params)
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: id
+            }
+        })
+
+        return response.json(user)
+    })
+
     route.post('/users', async (request: Request, response: Response) => {
         const createUserBody = z.object({
             name: z.string(),

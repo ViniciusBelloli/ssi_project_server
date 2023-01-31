@@ -21,8 +21,8 @@ model User {
   userRevokeKey String
   token         Token[]
 
-  messageFrom Messages[] @relation("messageFrom")
-  messageTo   Messages[] @relation("messageReveive")
+  userMessageFrom    Messages[] @relation("userMessageFrom")
+  userMessageReceive Messages[] @relation("userMessageReceive")
 }
 
 model Token {
@@ -38,12 +38,13 @@ model Token {
 }
 
 model Messages {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  message     String
-  createdAt   DateTime @default(now())
-  userFrom    String   @db.ObjectId
-  userReceive String   @db.ObjectId
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  messageFrom    String
+  messageReceive String
+  createdAt      DateTime @default(now())
+  userFrom       String   @db.ObjectId
+  userReceive    String   @db.ObjectId
 
-  messageFrom    User @relation("messageFrom", fields: [userFrom], references: [id])
-  messageReveive User @relation("messageReveive", fields: [userReceive], references: [id])
+  userMessageFrom    User @relation("userMessageFrom", fields: [userFrom], references: [id])
+  userMessageReceive User @relation("userMessageReceive", fields: [userReceive], references: [id])
 }
